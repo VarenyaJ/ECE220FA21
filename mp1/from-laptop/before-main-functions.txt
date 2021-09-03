@@ -1,0 +1,27 @@
+;need all of the histogram bin labels, spaces, and newlines
+;have to handle loop control over bins
+
+; ****************************************
+
+;Use x000A as newline character not x000D
+
+; ****************************************
+
+; example code has character -> space -> frequency
+; use left shift? to calculate amount of letters  
+; need to turn 4 binary bits into 1 hex bit then print out
+
+; R0 = output/print function
+; R1 = Hold the character that needs to be printed in here
+; R2 = Use this for the digit counter
+; R3 = Probably need another counter for bin-to-hex conversion
+; R4 = (counter for) # of rows (maybe look at ECE120 lab 11 and 13)
+; R5 = use to hold address of the binary digit to be printed
+; R6 = just use as a temp register to move stuff around
+
+
+; DO NOT USE R7, it is used for special trap commands (Prof. Moon's notes)
+
+	LD	R1, ASCII_AT_THE_RATE
+	LD	R3, NUM_BINS
+	LD	R5, HIST_ADDR

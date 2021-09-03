@@ -1,0 +1,27 @@
+; the data needed by the program
+NUM_BINS	.FILL #27	; 27 loop iterations
+NEG_AT		.FILL xFFC0	; the additive inverse of ASCII '@'
+AT_MIN_Z	.FILL xFFE6	; the difference between ASCII '@' and 'Z'
+AT_MIN_BQ	.FILL xFFE0	; the difference between ASCII '@' and '`'
+HIST_ADDR	.FILL x3F00     ; histogram starting address
+STR_START	.FILL x4000	; string starting address
+
+; need char for at the rate, space between letter and frequency, and need to have \n
+ASCII_AT_THE_RATE   .FILL x0040 ; ASCII encoding for '@' symbol
+ASCII_SPACE 		    .FILL x0020	; ASCII encoding for 'space'
+ASCII_NEW_LINE_FEED    .FILL x000A ; ASCII break into next line
+
+; Use x000A as newline character not x000D
+
+ASCII_ZERO    		.FILL x0030	; ASCII encoding for '0'
+ASCII_CAPITAL_A        .FILL x0041	; ASCII encoding for 'A'
+
+; for testing, you can use the lines below to include the string in this
+; program...
+; STR_START	.FILL STRING	; string starting address
+; STRING		.STRINGZ "This is a test of the counting frequency code.  AbCd...WxYz."
+
+	; the directive below tells the assembler that the program is done
+	; (so do not write any code below it!)
+
+	.END

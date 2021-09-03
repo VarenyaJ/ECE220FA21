@@ -1,111 +1,106 @@
-;
-; The code given to you here implements the histogram calculation that 
-; we developed in class.  In programming lab, we will add code that
-; prints a number in hexadecimal to the monitor.
-;
-; Your assignment for this program is to combine these two pieces of 
-; code to print the histogram to the monitor.
-;
-; If you finish your program, 
-;    ** commit a working version to your repository  **
-;    ** (and make a note of the repository version)! **
+;need all of the histogram bin labels, spaces, and newlines
+;have to handle loop control over bins
+
+; ****************************************
+
+;I looked at past histogram resources
+;https://courses.grainger.illinois.edu/ece198kl/sp2013/programs/prog1.pdf
+
+; Lost initial MP copy in the middle of the week, so this is a rushed version that was open on an online-gdb tab
+
+; ****************************************
 
 
-	.ORIG	x3000		; starting address is x3000
+
+; ****************************************
+
+;Use x000A as newline character not x000D
+
+; ****************************************
+
+; example code has character -> space -> frequency
+; use left shift? to calculate amount of letters  
+; need to turn 4 binary bits into 1 hex bit then print out
+
+; R0 = output/print function
+; R1 = Hold the character that needs to be printed in here
+; R2 = Use this for the digit counter
+; R3 = Probably need another counter for bin-to-hex conversion
+; R4 = (counter for) # of rows (maybe look at ECE120 lab 11 and 13)
+; R5 = use to hold address of the binary digit to be printed
+; R6 = just use as a temp register to move stuff around
 
 
-;
-; Count the occurrences of each letter (A to Z) in an ASCII string 
-; terminated by a NUL character.  Lower case and upper case should 
-; be counted together, and a count also kept of all non-alphabetic 
-; characters (not counting the terminal NUL).
-;
-; The string starts at x4000.
-;
-; The resulting histogram (which will NOT be initialized in advance) 
-; should be stored starting at x3F00, with the non-alphabetic count 
-; at x3F00, and the count for each letter in x3F01 (A) through x3F1A (Z).
-;
-; table of register use in this part of the code
-;    R0 holds a pointer to the histogram (x3F00)
-;    R1 holds a pointer to the current position in the string
-;       and as the loop count during histogram initialization
-;    R2 holds the current character being counted
-;       and is also used to point to the histogram entry
-;    R3 holds the additive inverse of ASCII '@' (xFFC0)
-;    R4 holds the difference between ASCII '@' and 'Z' (xFFE6)
-;    R5 holds the difference between ASCII '@' and '`' (xFFE0)
-;    R6 is used as a temporary register
-;
+; DO NOT USE R7, it is used for special trap commands (Prof. Moon's notes)
 
-	LD R0,HIST_ADDR      	; point R0 to the start of the histogram
+	LD	R1, ASCII_AT_THE_RATE	; Load R1
+
+	LD	R3, NUM_BINS	; Load R3
+
+	LD	R5, HIST_ADDR	; Load R5
+
+PRINT_NEW_ROW
+; prints row
+	ADD	R0,R1,#0
+	OUT
+; prints space
+	LD	R0, ASCII_SPACE
+	OUT
+
+	AND	R4, R4,#0		; R4 (row counter)
+	ADD	R4, R4, #4	; Initializing Big digit counter to be 4
+	LDR	R6, R5, #0	; Initializing R6 to hold the bit number of each bin stores of the HIST
+
+; prints 4 digit hex
+
+PRINT_DIGIT
+	AND	R0, R0, #0	; R0 (register which outputs to monitor)
+	AND	R2, R2, #0	; R2 (digit counter)
+	ADD	R4,R4,#4		; Initializing Small digit counter to be 4 AND R0 to be 0
+
+
+LEFT_SHIFT_LOOP
+	ADD	R2, R2, #0	; R2 (digit counter)
+	BRz	TRANSFER	; Judge whether get 4 bits
+	ADD	R0, R0, R0	; left shift so that R0 is used to be the digit that to be printed
+	ADD	R6, R6, #0	
+	BRzp	LSHIFT_N_REDUCE
+	ADD	R0, R0, #1	;  increments R0 by 1
+
+
+LSHIFT_N_REDUCE
+	ADD	R6, R6, R6	; Shift bit left by mulitplying R6 by 2
+	ADD	R2, R2, #-1	; decrement digit counter
+	BRnzp	LEFT_SHIFT_LOOP	; goes to previous loop
+
+
+TRANSFER			
+	ADD	R2, R0, #-9
+	BRp	BIG_TEN
+	LD	R2, ASCII_ZERO	; Load R2 with the ascii value for 0
+	ADD	R0, R0, R2
+	OUT
+	BRnzp	REDUCE_ROW_COUNT
+
+
+BIG_TEN		; For digit 10 and up
+	LD	R6, ASCII_CAPITAL_A
+	ADD	R0, R0, R6
+	ADD	R0, R0, #-10	; Decrease R0 by 10 for ascii values
+	OUT
+
+REDUCE_ROW_COUNT				
+	ADD	R4, R4, #-1	; Decrement the row counter
+	BRp	PRINT_DIGIT	; Loop to print the next digit
+	LD	R0, ASCII_NEW_LINE_FEED
+	OUT
+	ADD	R5, R5, #1	; Move counter to next address for binary bits
+	ADD	R1, R1, #1	; Increase 1 to hold the next character
+	ADD	R3, R3, #-1	; Decrease bin-to-hex counter
+	BRz	DONE		; stop the program when all 27 rows have been printed
+	BRnzp	PRINT_NEW_ROW	; give a new line when done
 	
-	; fill the histogram with zeroes 
-	AND R6,R6,#0		; put a zero into R6
-	LD R1,NUM_BINS		; initialize loop count to 27
-	ADD R2,R0,#0		; copy start of histogram into R2
-
-	; loop to fill histogram starts here
-HFLOOP	STR R6,R2,#0		; write a zero into histogram
-	ADD R2,R2,#1		; point to next histogram entry
-	ADD R1,R1,#-1		; decrement loop count
-	BRp HFLOOP		; continue until loop count reaches zero
-
-	; initialize R1, R3, R4, and R5 from memory
-	LD R3,NEG_AT		; set R3 to additive inverse of ASCII '@'
-	LD R4,AT_MIN_Z		; set R4 to difference between ASCII '@' and 'Z'
-	LD R5,AT_MIN_BQ		; set R5 to difference between ASCII '@' and '`'
-	LD R1,STR_START		; point R1 to start of string
-
-	; the counting loop starts here
-COUNTLOOP
-	LDR R2,R1,#0		; read the next character from the string
-	BRz PRINT_HIST		; found the end of the string
-
-	ADD R2,R2,R3		; subtract '@' from the character
-	BRp AT_LEAST_A		; branch if > '@', i.e., >= 'A'
-NON_ALPHA
-	LDR R6,R0,#0		; load the non-alpha count
-	ADD R6,R6,#1		; add one to it
-	STR R6,R0,#0		; store the new non-alpha count
-	BRnzp GET_NEXT		; branch to end of conditional structure
-AT_LEAST_A
-	ADD R6,R2,R4		; compare with 'Z'
-	BRp MORE_THAN_Z         ; branch if > 'Z'
-
-; note that we no longer need the current character
-; so we can reuse R2 for the pointer to the correct
-; histogram entry for incrementing
-ALPHA	ADD R2,R2,R0		; point to correct histogram entry
-	LDR R6,R2,#0		; load the count
-	ADD R6,R6,#1		; add one to it
-	STR R6,R2,#0		; store the new count
-	BRnzp GET_NEXT		; branch to end of conditional structure
-
-; subtracting as below yields the original character minus '`'
-MORE_THAN_Z
-	ADD R2,R2,R5		; subtract '`' - '@' from the character
-	BRnz NON_ALPHA		; if <= '`', i.e., < 'a', go increment non-alpha
-	ADD R6,R2,R4		; compare with 'z'
-	BRnz ALPHA		; if <= 'z', go increment alpha count
-	BRnzp NON_ALPHA		; otherwise, go increment non-alpha
-
-GET_NEXT
-	ADD R1,R1,#1		; point to next character in string
-	BRnzp COUNTLOOP		; go to start of counting loop
-
-
-
-PRINT_HIST
-
-; you will need to insert your code to print the histogram here
-
-; do not forget to write a brief description of the approach/algorithm
-; for your implementation, list registers used in this part of the code,
-; and provide sufficient comments
-
-
-
+	
 DONE	HALT			; done
 
 
@@ -117,12 +112,20 @@ AT_MIN_BQ	.FILL xFFE0	; the difference between ASCII '@' and '`'
 HIST_ADDR	.FILL x3F00     ; histogram starting address
 STR_START	.FILL x4000	; string starting address
 
+; need char for at the rate, space between letter and frequency, and need to have \n
+ASCII_AT_THE_RATE   .FILL x0040 ; ASCII encoding for '@' symbol
+ASCII_SPACE 		    .FILL x0020	; ASCII encoding for 'space'
+ASCII_NEW_LINE_FEED    .FILL x000A ; ASCII break into next line
+
+; Use x000A as newline character not x000D
+
+ASCII_ZERO    		.FILL x0030	; ASCII encoding for '0'
+ASCII_CAPITAL_A        .FILL x0041	; ASCII encoding for 'A'
+
 ; for testing, you can use the lines below to include the string in this
 ; program...
 ; STR_START	.FILL STRING	; string starting address
 ; STRING		.STRINGZ "This is a test of the counting frequency code.  AbCd...WxYz."
-
-
 
 	; the directive below tells the assembler that the program is done
 	; (so do not write any code below it!)
