@@ -1,9 +1,7 @@
 Compilation Results:
 ********************
 STARTING PASS 1
-0 errors found in first pass.
-STARTING PASS 2
-0 errors found in second pass.
+3 errors found in first pass.
 
 Test 1 (10 pts) Answer = xC: 1 2 4 + 5 + +
 
@@ -27,9 +25,12 @@ Have fun.
 PC=x0494 IR=xB1AE PSR=x0400 (ZERO)
 R0=x0000 R1=x7FFF R2=x0000 R3=x0000 R4=x0000 R5=x0000 R6=x0000 R7=x0490 
                    x0494 x0FF9 BRNZP TRAP_HALT
-Loaded "mp2.obj" and set PC to x3000
-WARNING: No symbols are available.
+Failed to load "mp2.obj."
 Will not use stdin for LC-3 console input during script execution.
+
+
+--- halting the LC-3 ---
+
 PC=x0494 IR=xB1AE PSR=x0400 (ZERO)
 R0=x0000 R1=x7FFF R2=x0000 R3=x0000 R4=x0000 R5=x0000 R6=x0000 R7=x0490 
                    x0494 x0FF9 BRNZP TRAP_HALT
@@ -41,4 +42,4 @@ This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2021-09-16_18:18:33
+Timestamp: 2021-09-17_00:33:27
