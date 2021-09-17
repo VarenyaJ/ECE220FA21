@@ -62,6 +62,38 @@ RESULT
 
 ;************************** PART 1 ABOVE THIS LINE**************************
 
+PRINT_R7 .BLKW #1 ; save R7 in 1 block of memory
+ZERO .FILL x30
+A .FILL #65 ; the ASCII value for 'A'
+ASCII .FILL x37 ; the ASCII value for 7
+STORE_R7 .BLKW #1
+	
+;R0 - keyboard character i/o
+;R1- temp register
+;R2- second temp register
+;R3- hexadecimal output
+;R4- hold value last popped
+;R5- output from push/pop subroutine
+;R6 - last displayed number
+
+EVALUATE
+;your code goes here
+	ST R7, STORE_R7
+
+KEYBOARD_INPUT
+	GETC                        ; scan input
+	OUT                         ; print value
+	LD R2, EQUALSIGN_INPUT      ; load R2 with equal sign
+	ADD R2, R2, R0              ; add keyboard character value value to the second temp register
+	BRz PRODUCT                 ; loop PRODUCT
+
+	LD R2, SPACECHARACTER       ; the character is a space, load the value into R2
+	ADD R2, R0, R2              ; add keyboard character value value to the second temp register
+	BRz KEYBOARD_INPUT          ; loop KEYBOARD_INPUT
+
+
+
+
 ;************************** PART 2 ABOVE THIS LINE**************************
 
 ;IN:R0, OUT:R5 (0-success, 1-fail/overflow)
