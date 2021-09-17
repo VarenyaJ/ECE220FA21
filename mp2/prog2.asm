@@ -23,7 +23,7 @@ PRINT_HEX
 	ADD R6, R5, #0        ; move output from push/pop into i/o
 
 LOOP_SHIFT              
-	AND R1, R1, #0        ; clear R1
+    AND R1, R1, #0        ; clear R1
     ADD R1, R1, #4        ; add decimal 4 to temp register
 
 INITIAL_SHIFT
@@ -32,7 +32,7 @@ INITIAL_SHIFT
     ADD R0, R0, #4        ; add #4 to register with last value popped
 
 TAKE_OUT
-	ADD R2, R2, R2        ; shift R2 left -> double its value
+    ADD R2, R2, R2        ; shift R2 left -> double its value
     ADD R6, R6, #0        ; clear R6
     BRzp SHIFT            ; loop the SHIFT label until negative
     ADD R2, R2, #1        ; update R2 by incrementing the second temp register
@@ -46,7 +46,7 @@ TWO_PRINTS
 	ADD R0, R2, #-9       ; decrease temp register by 9 and store in i/o
 	BRnz PRINT_IO_NUM     ; loop PRINT_IO_NUM
 	LD R0, #65            ; store A in i/o register
-    ADD R0, R0, R2        ; R0 is then added with R2, updating R0 register
+        ADD R0, R0, R2        ; R0 is then added with R2, updating R0 register
 	ADD R0, R0, #-10      ; decrement i/o register by 10
 	BRnzp OUT_LOOP        ; loop OUT_LOOP
 
