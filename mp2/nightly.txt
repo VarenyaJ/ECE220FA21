@@ -1,7 +1,7 @@
 Compilation Results:
 ********************
 STARTING PASS 1
-3 errors found in first pass.
+2 errors found in first pass.
 
 Test 1 (10 pts) Answer = xC: 1 2 4 + 5 + +
 
@@ -42,4 +42,4 @@ This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2021-09-17_00:33:27
+Timestamp: 2021-09-18_00:32:59
