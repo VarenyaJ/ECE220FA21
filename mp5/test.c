@@ -1,3 +1,5 @@
+//test.c
+//https://www.onlinegdb.com/
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -48,6 +50,7 @@ int main (int argc, char *argv[] ){
     }else{
       printf("*****set_seed call srand: FAIL\n");
     }
+    printf("%d\n",score);   //print out score
     return score;
   }
 
@@ -79,6 +82,7 @@ int main (int argc, char *argv[] ){
     } else {
       printf("*****start_game ouput: FAIL\n");
     }
+    printf("%d\n",score);   //print out score
     return score;
 
   }
@@ -151,10 +155,10 @@ int main (int argc, char *argv[] ){
     }else{
       printf("*****make_guess test3-2: FAIL \n");  
     }
+    printf("%d\n",score);   //print out score    
     return score;
 
 
   }
   return 0;
 }
-
