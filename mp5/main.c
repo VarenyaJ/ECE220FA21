@@ -1,3 +1,5 @@
+//main.c
+//https://www.onlinegdb.com/
 #include <stdio.h>
 #include <string.h>
 
@@ -41,7 +43,7 @@ int main ()
       } while (retval <= 0);
         //If guess is correct, we are done
       if (retval == 2) {
-        printf ("You guessed correctly in %d guesses.\n", number);
+        printf ("You guessed correctly in %d guesses.\n", guess_number);
         printf ("The solution was %s %s %s %s.\n", solutions[0], solutions[1], solutions[2], solutions[3]);
         return 0;
       }
@@ -52,4 +54,3 @@ int main ()
 
     return 0;
 }
-

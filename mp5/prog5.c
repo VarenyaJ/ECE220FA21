@@ -1,3 +1,6 @@
+//prog5.c
+//https://www.onlinegdb.com/
+
 /*      
  *
  * prog5.c - source file adapted from UIUC ECE198KL Spring 2013 Program 4
@@ -11,12 +14,33 @@
  * in this file to help you get started.
  */
 
+/*
 
+The program implements a modified version of the 'Wheel of Fortune' which uses the names of some famous characters. 
+
+To play the game, the user first enters a "seed" value, which is an integer.
+This seed value initializes a pseudo-random number generator.
+Using the pseudo-random number generator, 4 strings will be chosen from the string pool given below.
+The length of the string  < 10 can be assumed to be > 10.
+
+The player then has 10 guesses to get the correct sequence of the strings.
+The game will terminate if the player guesses all 4 strings correctly or all 10 guesses are exhausted.
+Guesses are typed into the terminal. After each guess, the player is given feedback on the number of perfect matches and misplaced matches, which is printed to the screen.
+The number of guesses remaining and the score of the current guess are also displayed in the feedback.
+
+The player will get 1000 points for each perfect guess and 100 points for each imperfect guess.
+The game will keep track of the current best score and will display it at the end.
+
+The guess strings that appear in the same place in the solutions are called perfect matches.
+The strings that appear somewhere in the solution code but in a different place in the solution are called misplaced matches. 
+
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "prog5.h"
+
 
 int guess_number;
 int max_score;
@@ -34,6 +58,7 @@ void print_pool() {
     printf("\n");
 }
 
+
 /*
  * is_valid -- This function checks whether a string is valid
  * INPUTS: str -- a string to be checked
@@ -41,6 +66,8 @@ void print_pool() {
  * RETURN VALUE: 0 if str is invalid, or 1 if str is valid
  * SIDE EFFECTS: none
  */
+
+
 int is_valid(char* str) {
     int i = 0;
     if (str == NULL) {
@@ -84,14 +111,22 @@ int set_seed (const char seed_str[]) {
 //    Check that the return value is 1 to ensure the user enters only an integer. 
 //    Feel free to uncomment these statements, modify them, or delete these comments as necessary. 
 //    You may need to change the return statement below
-    int seed;
-    char post[2];
-    if (sscanf (seed_str, "%d%1s", &seed, post) != 1) {
-      // your code here
-    }
-    // your code here
-}
 
+
+    int seed; //given
+    char post[2]; //given
+    post[0] = 0; //set pos[0] to a number
+
+    //checks to see if the seed may be invalid 
+    if (sscanf (seed_str, "%d%1s", &seed, post) != 1) { 
+    
+    printf("set_seed: invalid seed\n"); //prints the error message to displayed onto the monitor
+    return 0; //returns to 0 if the set_seed function does not work
+    }
+    
+    srand(seed); //else sets seed
+    return 1; //returns 1 which means function was successful
+}
 
 /*
  * start_game -- This function is called by main.c after set_seed but before the user makes guesses.
@@ -106,9 +141,27 @@ int set_seed (const char seed_str[]) {
  * RETURN VALUE: none
  * SIDE EFFECTS: records the solution in the static solution variables for use by make_guess, set guess_number
  */
-void start_game () {
-    //your code here
+ 
+ 
+////////////////////////////////////////////////////////////////////////////////
+
+
+void start_game ()
+{
+
+    for(int i = 0; i<4; i++)    //utlize a for loop to set conditions and allow the number to be able to be accessed
+    {
+    int number = rand()%8;  
+    strcpy(solutions[i],pool[number]); // copies the string from the pool in order to correlate it to the solutions 
+    }
+
+  guess_number = 1; //from description both guess_number and max_score are initialized and set 
+  max_score = -1; 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 /*
  * make_guess -- This function is called by main.c after the user types in a guess.
@@ -129,8 +182,81 @@ void start_game () {
  *               or an error message (invalid guess)
  *               (NOTE: the output format MUST MATCH EXACTLY, check the wiki writeup)
  */
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 int make_guess (const char guess_str[]) {
   // your code here
+  char guess_array[4][10]; //an array where the guesses will be stored is set
+  char extra_char[2]; // an array which will store the extra characters can be set with 2 similar to post[2] 
+ 
+  if(sscanf(guess_str,"%s %s %s %s %1s", guess_array[0], guess_array[1], guess_array[2], guess_array[3], extra_char)!= 4){ //splits the guess_str properly
+    //if more than 4 guesses are made then prints an error message if it does exceed by alot
+    printf("make_guess: invalid guess\n");
+    return 0;
 }
 
+  for (int x = 0; x<4;  x++){ //sets up a for loop to check if the guesses are matching up with the pool for accuracy and placement 
+    if(is_valid(guess_array[x])==0){ 
+	printf("make_guess: invalid guess\n");
+	return 0;
+      }
+  }
+   
+    //Points and Scores are validated here 
 
+  int true_guess = 0; //intializes the number of correct guesses made 
+  int sol_placement = 0; //intializes the placement number if it matches with the soltutions 
+    
+  int stored_guesses[4] = {0,0,0,0}; //sets up an array for storing the guesses 
+  int stored_sol[4] = {0,0,0,0}; //sets up an array for storing the correct guessing within solutions 
+
+  for(int s = 0; s<4; s++){ //here we check our guesses to see if they match up with the program's set in output
+    if(strcmp(guess_array[s],solutions[s])==0){ //here we see if the user's guesses are in the correct order
+      sol_placement ++; //if it is, increase the placment by 1
+      stored_guesses[s] = 1; //stored guesses keeps the stored value at the index equal to 1
+      stored_sol[s] = 1; //same with the solutions array
+	}
+    }
+
+  for (int s = 0; s<4; s++){ //here we create the same loop to make sure that our inital array is storing current and updated values 
+    if(stored_guesses[s]==0){ //if the index value at the array is equal to 0 then it goes into a another forloop with a nested if statement
+      for(int t = 0; t<4; t++){ //here the solutions are iterated and checked to see if the computer is storing the solutions and updating it
+	if(stored_sol[t]==0){ //if the index value at the solutions array is equal to 0 then 
+	  if(strcmp(guess_array[s],solutions[t])==0){ //correct value from user and computer are checked 
+	    true_guess ++; //correct guesses increases by 1.
+	    stored_guesses[s] = 1; //stored guesses keeps the stored value at the index equal to 1
+	    stored_sol[t] = 1; //same with the solutions array
+	    break; // breaks out of the program 
+		}
+	    }
+	  }
+	}
+      }
+
+  printf("With guess %d, you got %d perfect matches and %d misplaced matches\n", guess_number, sol_placement, true_guess); //prints the statment to user
+	guess_number++; // guess number is incremented here
+	int user_comp_score = 0; //initializes the user score to be compared with the computer's score
+	user_comp_score = 1000 * sol_placement + 100 * true_guess; //calculates the score accurately
+	if(user_comp_score > max_score){ // if the user's score is greater than the max score 
+	  max_score = user_comp_score; // then the max score which is from computer is set to the user's highest score 
+	}
+	printf("Your score is %d and current max score is %d.\n", user_comp_score, max_score); //print statement for the user to be updated with their score
+	if(max_score == 4000){ //if the max score is equal to the 4000 then
+	  return 2; // 2 is signaled indicating that the user was accurate in all guesses 
+	}
+	else{
+	  return 1; // returns 1 if  the user failed to guess correctly 
+	}
+	return 0; // return 0
+      }
