@@ -1,4 +1,15 @@
 /*
+This MP is about "The Game of Life" - also called "Life". It is a "cellular automaton" invented by British mathematician John Horton Conway in 1970". In the game, the "universe" is a two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, alive or dead. Every cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent. At each step in time, the following transitions occur:
+
+1)	Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+2)	Any live cell with two or three live neighbours lives on to the next generation.
+3)	Any live cell with more than three live neighbours dies, as if by over-population.
+3)	Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+The initial pattern is called the "seed" of the system. The game board is composed of "cells" which will be represented here by a matrix, where 0 is a dead cell and 1 is an alive cell. The rules will apply to every cell in the system simultaneously in every iteration. In this MP, the game board will be represented as a 1-D array. The size of the array is Width*Height. The game board will be passed as pointer (for example int *game_board). For example, to access the 10th element of the array, use the syntax "game_board[9]" (without the quotes, and remember that index starts from 0).
+*/
+
+/*
  * countLiveNeighbor
  * Inputs:
  * board: 1-D array of the current game board. 1 represents a live cell.
