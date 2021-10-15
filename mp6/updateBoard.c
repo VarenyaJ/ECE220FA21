@@ -59,7 +59,10 @@ return live_cell_count;    //give back latest live_cell_count
  * Output: board is updated with new values for next step.
  */
 void updateBoard(int* board, int boardRowSize, int boardColSize) {
-    int live_cell_count, x, y, new_board =[boardRowSize*boardColSize];   //create local live cell counter, x, and y variables again
+    int live_cell_count;
+    int x;
+    int y;
+    int new_board[boardRowSize*boardColSize];   //create local live cell counter, x, and y variables again
     //initialize a new board array with same dimensions as original
 
     //new loop for x, starting from index 0
@@ -116,8 +119,8 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
 
     //same for loops from long before :)
     for(x = 0; x <= boardRowSize - 1; x++){
-        for(y=0; y<=boardColSize; y++){
-            *(board + x*boardColSize + y) = new_board[x*boardColSize + y];
+        for(y=0; y<=boardColSize-1; y++){
+            board_compare[x*boardColSize + y] = *(board + x*boardColSize + y);
         }
     }
 
@@ -146,7 +149,7 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
         //same deal for y, starting from index 0 too
         for(y=0; y<=boardColSize - 1; y++){
             //if the compared board != to OG
-            if(board_compare[x*boardColSize + y] != *(board[x*boardColSize + y])){
+            if(board_compare[x*boardColSize + y] != *(board + x*boardColSize + y) ){
                 alive_cells = 0;
             }
         }
