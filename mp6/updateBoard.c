@@ -24,7 +24,7 @@ The initial pattern is called the "seed" of the system. The game board is compos
 int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, int col){
 
     int x, y;
-    int live_cell_count=0;
+    int live_cell_count = 0;
     //initialize x for rows, y for columns, and live_cell_count to keep track of alive cells
     //going to be using row major order
     //create loop to give x a value based on row
@@ -36,7 +36,7 @@ int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, i
                 if(y >= 0 && y <= (boardColSize-1)){
                 //look to lab6 matrix.c file and lab6 worksheet for how to convert and reference a 2-D matrix as a 1-D matrix
                 //need to reference the matrix index's address/pointer
-                if(*(board + x*boardColSize) == 1){     //(row index * column size) + column index
+                if(*(board + x*boardColSize + y) == 1){     //(row index * column size) + column index
                     live_cell_count++;  //increase live cell counter by 1
                 }
                 }
@@ -68,17 +68,17 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     //initialize a new board array with same dimensions as original
 
     //new loop for x, starting from index 0
-    for(x=0; x<=boardRowSize - 1; x++){
+    for(x = 0; x <= boardRowSize - 1; x++){
         //same deal for y, starting from index 0 too
-        for(y=0; y<=boardColSize - 1; y++){
+        for(y = 0; y <= boardColSize - 1; y++){
             //here we gotta set the new board array equal to the pointer of the (OG board + x * boardColSize + y)
             new_board[x * boardColSize + y] = *(board + x * boardColSize + y);
         }
     }
 
     //another (for loop) one
-    for(x=0; y<=boardRowSize - 1; x++){
-        for(y=0; y<=boardColSize - 1; y++){
+    for(x = 0; y <= boardRowSize - 1; x++){
+        for(y = 0; y <= boardColSize - 1; y++){
 
             //set new alive value
             live_cell_count = countLiveNeighbor(board, boardRowSize, boardColSize, x, y);
@@ -87,7 +87,7 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
             if((live_cell_count < 2) || live_cell_count > 3){
                 new_board[x*boardColSize + y] = 0;  //follow rules to kill cells
             }
-            else if (live_cell_count == 3)
+            if (live_cell_count == 3)
             {
                 new_board[x*boardColSize + y] = 1;  //follow rules to make cells alive
             }
@@ -95,7 +95,7 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     }
 //after repeating the 2 for loops again, need to check board pointers
     for(x = 0; x <= boardRowSize - 1; x++){
-        for(y=0; y<=boardColSize - 1; y++){
+        for(y = 0; y <= boardColSize - 1; y++){
             *(board + x*boardColSize + y) = new_board[x*boardColSize + y];
         }
     }
@@ -121,7 +121,7 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
 
     //same for loops from long before :)
     for(x = 0; x <= boardRowSize - 1; x++){
-        for(y=0; y<=boardColSize - 1; y++){
+        for(y = 0; y <= boardColSize - 1; y++){
             board_compare[x*boardColSize + y] = *(board + x*boardColSize + y);
         }
     }
@@ -135,11 +135,11 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
             if(live_cell_count < 2){
                 board_compare[x*boardColSize + y] = 0;  //less than 2 = dead
             }
-            else if (live_cell_count == 3)
+            if (live_cell_count == 3)
             {
                 board_compare[x*boardColSize + y] = 1;  //3 = alive
             }
-            else if (live_cell_count > 3)
+            if (live_cell_count > 3)
             {
                 board_compare[x*boardColSize + y] = 0;  //more than 3 = dead
             }
