@@ -77,17 +77,17 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     }
 
     //another (for loop) one
-    for(x=0; y<=boardRowSize; x++){
-        for(y=0; y<=boardColSize; y++){
+    for(x=0; y<=boardRowSize - 1; x++){
+        for(y=0; y<=boardColSize - 1; y++){
 
             //set new alive value
-            live_cell_count=countLiveNeighbor(board, boardRowSize, boardColSize, x, y);
+            live_cell_count = countLiveNeighbor(board, boardRowSize, boardColSize, x, y);
 
             //if statement for life life<2 or life>3
-            if((live_cell_count>2) || live_cell_count>3){
+            if((live_cell_count < 2) || live_cell_count > 3){
                 new_board[x*boardColSize + y] = 0;  //follow rules to kill cells
             }
-            else if (live_cell_count==3)
+            else if (live_cell_count == 3)
             {
                 new_board[x*boardColSize + y] = 1;  //follow rules to make cells alive
             }
@@ -95,7 +95,7 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     }
 //after repeating the 2 for loops again, need to check board pointers
     for(x = 0; x <= boardRowSize - 1; x++){
-        for(y=0; y<=boardColSize; y++){
+        for(y=0; y<=boardColSize - 1; y++){
             *(board + x*boardColSize + y) = new_board[x*boardColSize + y];
         }
     }
@@ -121,21 +121,21 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
 
     //same for loops from long before :)
     for(x = 0; x <= boardRowSize - 1; x++){
-        for(y=0; y<=boardColSize-1; y++){
+        for(y=0; y<=boardColSize - 1; y++){
             board_compare[x*boardColSize + y] = *(board + x*boardColSize + y);
         }
     }
 
     //another for loop series to update boardgame
-    for(x=0; x<=boardRowSize-1; x++){
-        for(y=0; y<=boardColSize-1; y++){
+    for(x = 0; x <= boardRowSize - 1; x++){
+        for(y = 0; y <= boardColSize - 1; y++){
             //set live_cell_count to countLiveNeighbor
-            live_cell_count = countLiveNeighbor(board, boardRowSize, boardColSize, x, y);
+            live_cell_count = countLiveNeighbor (board, boardRowSize, boardColSize, x, y);
 
             if(live_cell_count < 2){
                 board_compare[x*boardColSize + y] = 0;  //less than 2 = dead
             }
-            else if (live_cell_count ==3)
+            else if (live_cell_count == 3)
             {
                 board_compare[x*boardColSize + y] = 1;  //3 = alive
             }
@@ -147,9 +147,9 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
     }
 
     //bring back for loops again https://genius.com/Backstreet-boys-everybody-backstreets-back-lyrics
-    for(x=0; x<=boardRowSize - 1; x++){
+    for(x = 0; x <= boardRowSize - 1; x++){
         //same deal for y, starting from index 0 too
-        for(y=0; y<=boardColSize - 1; y++){
+        for(y = 0; y <= boardColSize - 1; y++){
             //if the compared board != to OG
             if(board_compare[x*boardColSize + y] != *(board + x*boardColSize + y) ){
                 alive_cells = 0;
