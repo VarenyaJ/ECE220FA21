@@ -29,11 +29,11 @@ int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, i
     //going to be using row major order
     //create loop to give x a value based on row
     for(x = row-1; x <= row + 1; x++){
-        if((x >= 0) && (x <= (boardRowSize-1))){
+        if((x >= 0) && (x <= boardRowSize-1)){
             //here comes loop for columns
             for(y = col - 1; y <= col + 1; y++){
 
-                if(y >= 0 && y <= (boardColSize-1)){
+                if(y >= 0 && (y <= boardColSize-1) ){
                 //look to lab6 matrix.c file and lab6 worksheet for how to convert and reference a 2-D matrix as a 1-D matrix
                 //need to reference the matrix index's address/pointer
                 if(*(board + x*boardColSize + y) == 1){     //(row index * column size) + column index
@@ -77,7 +77,7 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     }
 
     //another (for loop) one
-    for(x = 0; y <= boardRowSize - 1; x++){
+    for(x = 0; x <= boardRowSize - 1; x++){
         for(y = 0; y <= boardColSize - 1; y++){
 
             //set new alive value
@@ -146,7 +146,7 @@ int aliveStable(int* board, int boardRowSize, int boardColSize){
         }
     }
 
-    //bring back for loops again https://genius.com/Backstreet-boys-everybody-backstreets-back-lyrics
+    //bring back for loops again
     for(x = 0; x <= boardRowSize - 1; x++){
         //same deal for y, starting from index 0 too
         for(y = 0; y <= boardColSize - 1; y++){
