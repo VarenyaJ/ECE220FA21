@@ -23,15 +23,17 @@ The initial pattern is called the "seed" of the system. The game board is compos
 
 int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, int col){
 
-    int x, y, live_cell_count=0;   //initialize x for rows, y for columns, and live_cell_count to keep track of alive cells
+    int x, y;
+    int live_cell_count=0;
+    //initialize x for rows, y for columns, and live_cell_count to keep track of alive cells
     //going to be using row major order
     //create loop to give x a value based on row
-    for(x=row-1; x<=row+1; x++){
-        if(x>=0 && x<=(boardRowSize-1)){
+    for(x = row-1; x <= row + 1; x++){
+        if((x >= 0) && (x <= (boardRowSize-1))){
             //here comes loop for columns
-            for(y=col-1; y<=col+1; y++){
+            for(y = col - 1; y <= col + 1; y++){
 
-                if(y>=0 && y<= (boardColSize+1)){
+                if(y >= 0 && y <= (boardColSize-1)){
                 //look to lab6 matrix.c file and lab6 worksheet for how to convert and reference a 2-D matrix as a 1-D matrix
                 //need to reference the matrix index's address/pointer
                 if(*(board + x*boardColSize) == 1){     //(row index * column size) + column index
@@ -62,7 +64,7 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     int live_cell_count;
     int x;
     int y;
-    int new_board[boardRowSize*boardColSize];   //create local live cell counter, x, and y variables again
+    int new_board[boardRowSize * boardColSize];   //create local live cell counter, x, and y variables again
     //initialize a new board array with same dimensions as original
 
     //new loop for x, starting from index 0
