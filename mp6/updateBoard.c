@@ -26,15 +26,19 @@ int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, i
     int x, y, live_cell_count=0;   //initialize x for rows, y for columns, and live_cell_count to keep track of alive cells
     //going to be using row major order
     //create loop to give x a value based on row
-    for(x=row-1; x<= row; x++){
+    for(x=row-1; x<=row+1; x++){
         if(x>=0 && x<=(boardRowSize-1)){
             //here comes loop for columns
             for(y=col-1; y<=col+1; y++){
+
+                if(y>=0 && y<= (boardColSize+1)){
                 //look to lab6 matrix.c file and lab6 worksheet for how to convert and reference a 2-D matrix as a 1-D matrix
                 //need to reference the matrix index's address/pointer
                 if(*(board + x*boardColSize) == 1){     //(row index * column size) + column index
                     live_cell_count++;  //increase live cell counter by 1
                 }
+                }
+                
             }
         }
     }
@@ -61,11 +65,36 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
     //new loop for x, starting from index 0
     for(x=0; x<=boardRowSize - 1; x++){
         //same deal for y, starting from index 0 too
-        for(y=0; y<=boardColSize-1; y++){
+        for(y=0; y<=boardColSize - 1; y++){
             //here we gotta set the new board array equal to the pointer of the (OG board + x * boardColSize + y)
             new_board[x * boardColSize + y] = *(board + x * boardColSize + y);
         }
     }
+
+    //another (for loop) one
+    for(x=0; y<=boardRowSize; x++){
+        for(y=0; y<=boardColSize; y++){
+
+            //set new alive value
+            live_cell_count=countLiveNeighbor(board, boardRowSize, boardColSize, x, y);
+
+            //if statement for life life<2 or life>3
+            if((live_cell_count>2) || live_cell_count>3){
+                new_board[x*boardColSize + y] = 0;  //follow rules to kill cells
+            }
+            else if (live_cell_count==3)
+            {
+                new_board[x*boardColSize + y] = 1;  //follow rules to make cells alive
+            }
+        }
+    }
+//after repeating the 2 for loops again, need to check board pointers
+    for(x = 0; x <= boardRowSize - 1; x++){
+        for(y=0; y<=boardColSize; y++){
+            *(board + x*boardColSize + y) = new_board[x*boardColSize + y];
+        }
+    }
+    return; //go back into game program
 }
 
 /*
@@ -80,4 +109,50 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
  * return 0 if the alive cells change for the next step.
  */ 
 int aliveStable(int* board, int boardRowSize, int boardColSize){
+    int alive_cells = 1;    //new variable
+    int live_cell_count = 0;    //re-introduce live_cell_count
+    int board_compare[boardRowSize * boardColSize]; //new array
+    int x, y;   //x and y return again
+
+    //same for loops from long before :)
+    for(x = 0; x <= boardRowSize - 1; x++){
+        for(y=0; y<=boardColSize; y++){
+            *(board + x*boardColSize + y) = new_board[x*boardColSize + y];
+        }
+    }
+
+    //another for loop series to update boardgame
+    for(x=0; x<=boardRowSize-1; x++){
+        for(y=0; y<=boardColSize-1; y++){
+            //set live_cell_count to countLiveNeighbor
+            live_cell_count = countLiveNeighbor(board, boardRowSize, boardColSize, x, y);
+
+            if(live_cell_count < 2){
+                board_compare[x*boardColSize + y] = 0;  //less than 2 = dead
+            }
+            else if (live_cell_count ==3)
+            {
+                board_compare[x*boardColSize + y] = 1;  //3 = alive
+            }
+            else if (live_cell_count > 3)
+            {
+                board_compare[x*boardColSize + y] = 0;  //more than 3 = dead
+            }
+        }
+    }
+
+    //bring back for loops again https://genius.com/Backstreet-boys-everybody-backstreets-back-lyrics
+    for(x=0; x<=boardRowSize - 1; x++){
+        //same deal for y, starting from index 0 too
+        for(y=0; y<=boardColSize - 1; y++){
+            //if the compared board != to OG
+            if(board_compare[x*boardColSize + y] != *(board[x*boardColSize + y])){
+                alive_cells = 0;
+            }
+        }
+    }
+
+
+    return alive_cells; //spit out the current value fo alive_cells
+    
 }
