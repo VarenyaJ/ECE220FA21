@@ -1,5 +1,10 @@
 #include "game.h"
 
+/*
+This game starts with user getting a random tile of value 2 or 4. The user then uses WSAD keys to move up, down, left, and right
+repectively. This mimics the "2048" game with sliding tiles, so when 2 tiles of the same value who are horizontally/vertically adjacent
+get swiped in the same direction, they fuse into one tile whose value is the sum of the previous 2 tiles
+*/
 
 game * make_game(int rows, int cols)
 /*! Create an instance of a game structure with the given number of rows
@@ -14,6 +19,16 @@ game * make_game(int rows, int cols)
     mygame->cells = malloc(rows*cols*sizeof(cell));
 
     //YOUR CODE STARTS HERE:  Initialize all other variables in game struct
+    int x = 0;  //initialize x
+
+    for(x = 0; x<=((rows*cols)-1); x++){    //start from 0, then loop through to all cells
+        *((*mygame).cells + x) = -1;    // set (a pointer points to a pointer plus x) equal to -1
+    }
+
+    //set row pointer equal to rows in mygame
+    (*mygame).rows = rows;
+    //set column pointer equal to column in mygame
+    (*mygame).cols = cols;
 
 
     return mygame;
@@ -32,6 +47,15 @@ void remake_game(game ** _cur_game_ptr,int new_rows,int new_cols)
 	(*_cur_game_ptr)->cells = malloc(new_rows*new_cols*sizeof(cell));
 
 	 //YOUR CODE STARTS HERE:  Re-initialize all other variables in game struct
+     int x = 0;     // bring back x
+     for(x = 0; x <= ((new_rows*new_cols)-1); x++){
+         //re-initialize cells to -1
+         //then take pointer to double pointer, add x,  and set to -1
+         *((**_cur_game_ptr).cells + x) = -1;
+     }
+     //set new rows and columns in current game
+     (**_cur_game_ptr).rows = new_rows;
+     (**_cur_game_ptr).cols = new_cols;
 
 	return;	
 }
