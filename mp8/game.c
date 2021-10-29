@@ -240,14 +240,118 @@ int move_s(game * cur_game) //slide down
 int move_a(game * cur_game) //slide left
 {
     //YOUR CODE STARTS HERE
+    int x = 0;
+    int y = 0;
+    //re-initialize x and y
+    int last_column = -1;   //  use column instead of row for move_a and move_d
+    int current_column = -1;
+    int current_sum = 0;
+    int holder = 0;
 
-    return 1;
+    //rinse and repeat loops and conditionals
+    for(x = 0; x <= (*cur_game).rows - 1; x++){
+        last_column = -1;
+
+        for(y = 0; y <= (*cur_game).cols - 1; y++){
+            //
+            if(*((*cur_game).cells + x * (*cur_game).cols + y) != -1){
+                current_sum = 0;
+
+                for(current_column = 0; current_column < y; current_column++){
+                    //
+                    if(*((*cur_game).cells + x * (*cur_game).cols + current_column) == -1){
+                        current_sum = 1;
+                        break;
+                    }
+                }
+
+                //rinse and repeat
+                if(current_sum == 1){
+                    //
+                    *((*cur_game).cells + x * (*cur_game).cols + current_column) = *((*cur_game).cells + x * (*cur_game).cols + y);
+
+                    *((*cur_game).cells + x * (*cur_game).cols + y) = -1;
+
+                    holder = 1;
+                 }
+
+                 if((current_column - 1) != last_column){
+                    //
+                    if(*((*cur_game).cells + x * (*cur_game).cols + (current_column - 1)) == *((*cur_game).cells + x * (*cur_game).cols + current_column)){
+                        //
+                        *((*cur_game).cells + x * (*cur_game).cols + (current_column - 1)) *= 2;
+
+                        (*cur_game).score += *((*cur_game).cells + x * (*cur_game).cols + (current_column - 1));
+
+                        *((*cur_game).cells + x * (*cur_game).cols + current_column) = -1;
+
+                        holder = 1;
+                    }
+                 }
+            }
+        }
+    }
+
+    return holder;
 };
 
 int move_d(game * cur_game){ //slide to the right
     //YOUR CODE STARTS HERE
+    int x = 0;
+    int y = 0;
+    //re-initialize x and y
+    int last_column = -1;   //  use column instead of row for move_a and move_d
+    int current_column = -1;
+    int current_sum = 0;
+    int holder = 0;
 
-    return 1;
+    //rinse and repeat loops and conditionals
+    for(x = 0; x <= (*cur_game).rows - 1; x++){
+        last_column = -1;
+
+        for(y = (*cur_game).cols - 1; y >= 0; y--){
+            //
+            if(*((*cur_game).cells + x * (*cur_game).cols + y) != -1){
+                current_sum = 0;
+
+                for(current_column = (*cur_game).cols - 1; current_column >= y; current_column--){
+                    //
+                    if(*((*cur_game).cells + x * (*cur_game).cols + current_column) == -1){
+                        current_sum = 1;
+                        break;
+                    }
+                }
+
+                //rinse and repeat
+                if(current_sum == 1){
+                    //
+                    *((*cur_game).cells + x * (*cur_game).cols + current_column) = *((*cur_game).cells + x * (*cur_game).cols + y);
+
+                    *((*cur_game).cells + x * (* cur_game).cols + y) = -1;
+
+                    holder = 1;
+                 }
+
+                 if((current_column + 1) != last_column){
+                    //
+                    if(*((*cur_game).cells + x * (*cur_game).cols + (current_column + 1)) == *((*cur_game).cells + x * (*cur_game).cols + current_column)){
+                        //
+                        *((*cur_game).cells + x * (*cur_game).cols + (current_column + 1)) *= 2;
+
+                        (*cur_game).score += *((*cur_game).cells + x * (*cur_game).cols + (current_column + 1));
+
+                        *((*cur_game).cells + x * (*cur_game).cols + current_column) = -1;
+
+                        last_column = current_column - 1;
+
+                        holder = 1;
+                    }
+                 }
+            }
+        }
+    }
+
+    return holder;
 };
 
 int legal_move_check(game * cur_game)
@@ -257,8 +361,24 @@ int legal_move_check(game * cur_game)
  */
 {
     //YOUR CODE STARTS HERE
+    game * copy_game = make_game((*cur_game).rows, (*cur_game).cols);      //copy same game
 
-    return 1;
+    int end_move = 0;
+    int x;     //   can't go wrong with classics
+
+    for(x = 0; x <= (((*cur_game).rows * (*cur_game).cols) - 1); x++){
+        //
+        *((*copy_game).cells + x) = *((*cur_game).cells + x);
+    }
+
+    //check for movement in cells
+    if((move_w(copy_game) + move_a(copy_game) + move_s(copy_game) + move_d(copy_game)) != 0){
+        //
+        end_move = 1;
+    }
+
+
+    return end_move;
 }
 
 
