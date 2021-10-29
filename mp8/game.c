@@ -78,8 +78,20 @@ cell * get_cell(game * cur_game, int row, int col)
 */
 {
     //YOUR CODE STARTS HERE
+    //current game needs to find row and column  to return the cell's next value to
 
-    return NULL;
+    //check for valid row. Return NULL if row is out of bounds
+    if(row < 0 || row >= (*cur_game).rows){
+        return NULL;
+    }
+
+    //check for valid columns
+    if(col < 0 || col >= (*cur_game).cols){
+        return NULL;
+    }
+
+    return (*cur_game).cells + row * (*cur_game).cols + col;
+    // return 
 }
 
 int move_w(game * cur_game)
@@ -91,15 +103,138 @@ int move_w(game * cur_game)
 */
 {
     //YOUR CODE STARTS HERE
+    int x = 0;
+    int y = 0;
+    //re-initialize x and y
+    int last_row = -1;
+    int current_row = -1;
+    int current_sum = 0;
+    int holder = 0;
 
-    return 1;
+    //increment through y because we are moving in a vertically positive direction
+    for(y = 0; y <= (*cur_game).cols - 1; y++){
+        last_row = -1;
+
+        //increment through rows now
+        for(x = 0; x <= (*cur_game).rows - 1; x++){
+            
+            //make sure that the current_row is filled
+            if(*((*cur_game).cells + x * (* cur_game).cols + y) != -1){
+                current_sum = 0;
+
+                //game needs to find current row to continue
+                //need a for loop where current_row starts a 0 where condition is current_row<x and increments current_row
+                for(current_row = 0; current_row < x; current_row++){
+                    //here we need to check if pointer = -1
+                    if(*((*cur_game).cells + current_row * (*cur_game).cols + y) == -1){
+                        current_sum = 1;
+                        break;      //exits program
+                    }
+                }
+
+                //conditiional checck when current_sum=1
+                if(current_sum == 1){
+                    //then pointer from first part is set to pointer from second part
+                     *((*cur_game).cells + current_row * (*cur_game).cols + y) = *((*cur_game).cells + x * (*cur_game).cols + y);
+
+                     //then find out the current row's contents and allocate space
+                     *((*cur_game).cells + x * (*cur_game).cols + y) = -1;
+                     holder = 1;
+                }
+
+                //time for nested loops
+
+                //check if (current_row - 1) != last_row
+                if((current_row - 1) != last_row){
+                    //
+                    //if both results are the same
+                    if(*((*cur_game).cells + (current_row - 1) * (*cur_game).cols + y) == *((*cur_game).cells + current_row * (*cur_game).cols + y)){
+                        //
+                        //row in front of current_row becomes the result doubled
+                         *((*cur_game).cells + (current_row - 1) * (*cur_game).cols + y) *= 2;
+
+                         //then update score
+                         (*cur_game).score += *((*cur_game).cells + (current_row - 1) * (*cur_game).cols + y);
+
+                         //then make sure that we don't have empty cells
+                         *((*cur_game).cells + current_row * (*cur_game).cols + y) = -1;
+
+                         //change last_row
+                         last_row = current_row - 1;
+
+                         //update holder
+                         holder = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    return holder;  // move_w will spit out holder
 };
 
 int move_s(game * cur_game) //slide down
 {
     //YOUR CODE STARTS HERE
+    int x = 0;
+    int y = 0;
+    //re-initialize x and y
+    int last_row = -1;
+    int current_row = -1;
+    int current_sum = 0;
+    int holder = 0;
 
-    return 1;
+    //reset last_row to -1
+    for(y = 0; y <= (*cur_game).cols -1; y++){
+        last_row = -1;
+    }
+
+    //nested for loop time
+    //check if current_row is empty
+    for(x = (*cur_game).rows -1; x >= 0; x--){
+        //
+        if(*((*cur_game).cells + x * (*cur_game).cols + y) != -1){
+            current_sum = 0;
+
+            //another loop to find current solution
+            for(current_row = (*cur_game).rows -1; current_row > x; current_row--){
+                if(*((*cur_game).cells + current_row * (*cur_game).cols + y) == -1){
+                    current_sum = 1;
+                    break;
+                }
+            }
+
+            //another if loop but for current_sum == 1
+            if(current_sum == 1){
+                //
+                *((*cur_game).cells + current_row * (*cur_game).cols + y) = *((*cur_game).cells + x * (*cur_game).cols + y);
+
+                //clear contents of row
+                *((*cur_game).cells + x * (*cur_game).cols + y) = -1;
+
+                holder = 1;
+            }
+
+            //more nested if's
+            if((current_row + 1) != last_row){
+                //conditional if d-reference of pointers are the same
+                if(*((*cur_game).cells + (current_row + 1) * (*cur_game).cols + y) == *((*cur_game).cells + current_row * (*cur_game).cols + y)){
+                    //
+                    *((*cur_game).cells + (current_row + 1) * (*cur_game).cols + y) *= 2;
+
+                    (*cur_game).score += *((*cur_game).cells + (current_row + 1) * (*cur_game).cols + y);
+
+                    *((*cur_game).cells + current_row * (*cur_game).cols + y) = -1;
+
+                    last_row = current_row + 1;
+
+                    holder = 1;
+                }
+            }
+        }
+    }
+
+    return holder;
 };
 
 int move_a(game * cur_game) //slide left
