@@ -55,6 +55,15 @@ void destroyMaze(maze_t * maze)
 void printMaze(maze_t * maze)
 {
     // Your code here.
+    int i, j;
+    printf("%d %d\n", maze -> width, maze -> height);   // print out maze width and height
+    //                                                  // nested for loops
+    for (i = 0; i < maze -> height; i++){               // if i/j is less than the data reference to the maze and its height/width 
+      for (j = 0; j < maze -> width; j++){              // i/j will move through the iterations
+        printf("%c", maze -> cells[i][j]);              // print while maze data is set to the current array value at i and j
+      }
+      printf("\n");                                         //print a newline after each row
+    }
 }
 
 /*
