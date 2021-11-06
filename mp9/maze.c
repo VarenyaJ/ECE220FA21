@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "maze.h"
 
+/*
+The goal of this MP is to implement a maze solver using a recursive depth-first search, as well as a couple of
+functions that can be used to verify a correct solution. The maze output is the same as the initial width and height
+of the input maze. The program uses "%" to denote a wall, whereas an empty cell/path is left as a blank space.
+The input program also dictates where the start and endpoints are by "S" and "E" characters respectively.
+*/
+
 
 /*
  * createMaze -- Creates and fills a maze structure from the given file
@@ -26,6 +33,14 @@ maze_t * createMaze(char * fileName)
 void destroyMaze(maze_t * maze)
 {
     // Your code here.
+    int i;
+    //for loop which access all the mallocs in createMaze and frees them
+    for (i = 0; i < maze->height; i++){
+        free(maze->cells[i]);   //frees data inside cells
+        free(maze->cells);      //frees all cells
+        free(maze);             //free maze
+        maze = NULL;            //make sure maze does not point anywhere
+    }
 }
 
 /*
