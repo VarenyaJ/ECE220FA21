@@ -17,7 +17,6 @@ int main(int argc, char **argv)
         printf("this is null");
     printf("\nUnsolved maze:\n");
     printMaze(maze);
-    printf("this is not working");
 
     if(solveMazeDFS(maze, maze->startColumn, maze->startRow))
     {
