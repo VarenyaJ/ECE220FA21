@@ -20,32 +20,32 @@ The input program also dictates where the start and endpoints are by "S" and "E"
 maze_t * createMaze(char * fileName)
 {
     // Your code here. Make sure to replace following line with your own code.
-    int i, j, row_count, col_count;     //initialize i and j to count index, then use row_count and col_count to go through cells
+    int i, j, row, col;     //initialize i and j to count index, then use row and col to go through cells
     char c;     //create new character value
 
     FILE *reader = fopen(fileName, "r");    //use file with pointer reader to create a stream which can map the maze
-    fscanf(reader, "%d %d", &col_count, &row_count);    //read the column and row data from the file
+    fscanf(reader, "%d %d", &col, &row);    //read the column and row data from the file
     maze_t *new_maze = malloc(sizeof(maze_t));   //allocate memory for the maze_t structure
 
-    new_maze -> height = row_count;     //structure for the rows
-    new_maze -> width = col_count;      ////structure for the columns
+    new_maze -> height = row;     //structure for the rows
+    new_maze -> width = col;      ////structure for the columns
     
-    new_maze -> cells = (char **)malloc(row_count * sizeof(char *));  //allocate memory for the cells within the program
+    new_maze -> cells = (char **)malloc(row * sizeof(char *));  //allocate memory for the cells within the program
     
     //this for loop goes through the allocation structure and allows data from memory to be written to the program
-    //this way, when i=0 && i<row_count, the loop iterates through the cells and increments i
-    for (i = 0; i < row_count; i++){
-        new_maze -> cells[i] = (char *)malloc(col_count * sizeof(char));
+    //this way, when i=0 && i<row, the loop iterates through the cells and increments i
+    for (i = 0; i < row; i++){
+        new_maze -> cells[i] = (char *)malloc(col * sizeof(char));
     }
 
     //another set of nested loops accesses the row and columns in order to coy the maze onto the program file
-    for (i = 0; i < row_count; i++){
-        for (j = 0; j < col_count; j++){
+    for (i = 0; i < row; i++){
+        for (j = 0; j < col; j++){
             c = fgetc(reader);      // copy/duplicate the maze into the file here
 
             //conditional statement to map how to iterate through loops
             //if mae is not equal to newline character, then the duplication maze value is set to the currect value of c
-            if(c != '/n'){
+            if(c != "/n"){
                 new_maze -> cells[i][j] = c;
             }
             else{   //if it is equal to the newline character, then we don't save the data, we just loop through the iteration
@@ -131,5 +131,63 @@ void printMaze(maze_t * maze)
 int solveMazeDFS(maze_t * maze, int col, int row)
 {
     // Your code here. Make sure to replace following line with your own code.
-    return 0;
+
+    //conditional checks if maze is out of bounds
+    if(col < 0 || col >= maze -> width || row < 0 || row >= maze -> height)
+    {
+        return 0;   //return false because maze is out of bounds
+    }
+
+    //false if not an empty cell
+    if(maze -> cells[row][col] == WALL || maze -> cells[row][col] == PATH || maze -> cells[row][col] == VISITED){
+        return 0;   //return false because the cell is not an empty cell in the structure
+    }
+    
+    //return true if we reach the end
+    if(col == maze -> endColumn && row == maze -> endRow){
+        //restore the starting point of the maze and the sequence to get there before reaching the end
+        maze -> cells[maze -> startRow][maze -> startColumn] = START;
+        return 1;
+    }
+
+    //need to keep going and access references
+
+    //row and column paths
+    if(maze -> cells[row][col] != END){
+        maze -> cells[row][col] = PATH;     //write PATH as starting point then restore it struct last
+    }
+
+    //true if path goes in any direction
+    //start with left directions
+    if(solveMazeDFS(maze, col - 1, row)){
+        return 1;
+    }
+    
+    //row in another direction
+    if(solveMazeDFS(maze, col, row - 1)){
+        return 1;
+    }
+    
+    //column in another direction 
+    if(solveMazeDFS(maze, col + 1, row)){
+        return 1;
+    }
+    
+    //row in another direction
+    if(solveMazeDFS(maze, col, row + 1)){
+        return 1;
+    }
+
+
+
+    //conditionals to access maze data cell at current row and columm indecies
+    //if not equal to start and not equal to end
+
+    //take away (col, row) from solution and write as visited
+    if (maze -> cells[row][col] != START && maze -> cells[row][col] != END){
+        maze -> cells[row][col] = VISITED;  //row and column index taken unmarked as solution and marked as visited
+    }
+
+
+    return 0;   //end the program
 }
