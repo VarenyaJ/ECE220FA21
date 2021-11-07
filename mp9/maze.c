@@ -20,41 +20,58 @@ The input program also dictates where the start and endpoints are by "S" and "E"
 maze_t * createMaze(char * fileName)
 {
     // Your code here. Make sure to replace following line with your own code.
-    int i, j, row, col;     //initialize i and j to count index, then use row and col to go through cells
-    char new_val;     //create new character value
-
-    FILE *reader = fopen(fileName, "r");    //use file with pointer reader to create a stream which can map the maze
-    fscanf(reader, "%d %d", &col, &row);    //read the column and row data from the file
+    int row, col;     //initialize i and j to count index, then use row and col to go through cells
+   // char new_val;     //create new character value
+    printf("25");
+    FILE *openfile;
+    openfile= fopen(fileName, "r");    //use file with pointer reader to create a stream which can map the maze
+    printf("27");
+    if(openfile == NULL)
+    {
+        //printf("null");
+        return NULL;
+    //fclose(openfile);
+    }
+        
+    fscanf(openfile, "%d %d", &col, &row);    //read the column and row data from the file
     maze_t *new_maze = malloc(sizeof(maze_t));   //allocate memory for the maze_t structure
-
+    printf("31");
     new_maze -> height = row;     //structure for the rows
-    new_maze -> width = col;      ////structure for the columns
+    new_maze -> width = col;      //structure for the columns
     
-    new_maze -> cells = (char **)malloc(row * sizeof(char *));  //allocate memory for the cells within the program
+    new_maze -> cells = (char**)malloc(row * sizeof(char*));  //allocate memory for the cells within the program
+    printf("36");
     
+    int i, j;
     //this for loop goes through the allocation structure and allows data from memory to be written to the program
     //this way, when i=0 && i<row, the loop iterates through the cells and increments i
     for (i = 0; i < row; i++){
         new_maze -> cells[i] = (char *)malloc(col * sizeof(char));
     }
-
+    printf("here in the thing");
     //another set of nested loops accesses the row and columns in order to coy the maze onto the program file
     for (i = 0; i < row; i++){
         for (j = 0; j < col; j++){
-            new_val = fgetc(reader);      // copy/duplicate the maze into the file here
+            char new_val = fgetc(openfile); 
+            if(new_val == '\n')
+            {
+                    new_val = fgetc(openfile); 
+            }
+                 // copy/duplicate the maze into the file here
 
             //conditional statement to map how to iterate through loops
-            //if mae is not equal to newline character, then the duplication maze value is set to the currect value of h
+            //if new_val is not equal to newline character, then the duplication maze value is set to the currect value of the character
             if(new_val != '\n'){
                 new_maze -> cells[i][j] = new_val;
             }
-            else{   //if it is equal to the newline character, then we don't save the data, we just loop through the iteration
-                j--;
-            }
-
+           /* else{   //if it is equal to the newline character, then we don't save the data, we just loop through the iteration
+                //j--;
+                continue;
+            }*/
+            printf("here");
             //another nested conditional if the column variable is >= 0
-            if(j >= 0){     //access cell[i][-1]
-                if(new_maze -> cells[i][j] == START){
+            //if(j >= 0){     //access cell[i][-1]
+                if(new_val == START){
                     //starting point
                     //record the start point
                     new_maze -> startRow = i;
@@ -62,16 +79,16 @@ maze_t * createMaze(char * fileName)
                 }
                 
                 //access and record the endpoint of the program through the maze data
-                if(new_maze -> cells[i][j] == END){
+                if(new_val == END){
                     new_maze -> endRow = i;
                     new_maze -> endColumn = j;
                 }
-            }
+           // }
 
         }
     }
 
-    fclose(reader);     //close the file stream    
+    fclose(openfile);     //close the file stream    
     
     return new_maze;
 }
@@ -90,10 +107,12 @@ void destroyMaze(maze_t * maze)
     //for loop which access all the mallocs in createMaze and frees them
     for (i = 0; i < maze->height; i++){
         free(maze->cells[i]);   //frees data inside cells
-        free(maze->cells);      //frees all cells
-        free(maze);             //free maze
-        maze = NULL;            //make sure maze does not point anywhere
+                   //free maze
+                    //make sure maze does not point anywhere
     }
+     free(maze->cells);      //frees all cells
+    free(maze); 
+     maze = NULL;
 }
 
 /*
@@ -107,16 +126,22 @@ void destroyMaze(maze_t * maze)
  */
 void printMaze(maze_t * maze)
 {
+    
+    int a, b;
+    //printf("120");
     // Your code here.
-    int i, j;
-    printf("%d %d\n", maze -> width, maze -> height);   // print out maze width and height
+    //printf("height " + maze->height);
+    //printf("print 122");
+    //printf("%d %d\n", maze -> width, maze -> height);   // print out maze width and height
     //                                                  // nested for loops
-    for (i = 0; i < maze -> height; i++){               // if i/j is less than the data reference to the maze and its height/width 
-      for (j = 0; j < maze -> width; j++){              // i/j will move through the iterations
-        printf("%c", maze -> cells[i][j]);              // print while maze data is set to the current array value at i and j
+    for (a = 0; a < maze->height; a++){               // if i/j is less than the data reference to the maze and its height/width 
+    //printf("oribt 126");
+      for (b = 0; b < maze->width; b++){              // i/j will move through the iterations
+        printf("%c", maze->cells[a][b]);              // print while maze data is set to the current array value at i and j
       }
-      printf("\n");                                         //print a newline after each row
+       printf("\n");                                       //print a newline after each row
     }
+     
 }
 
 /*
@@ -149,6 +174,7 @@ int solveMazeDFS(maze_t * maze, int col, int row)
         maze -> cells[maze -> startRow][maze -> startColumn] = START;
         return 1;
     }
+    printf("[ast checks");
 
     //need to keep going and access references
 
@@ -187,7 +213,6 @@ int solveMazeDFS(maze_t * maze, int col, int row)
     if (maze -> cells[row][col] != START && maze -> cells[row][col] != END){
         maze -> cells[row][col] = VISITED;  //row and column index taken unmarked as solution and marked as visited
     }
-
 
     return 0;   //end the program
 }

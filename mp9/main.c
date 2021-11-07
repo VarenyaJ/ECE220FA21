@@ -13,8 +13,11 @@ int main(int argc, char **argv)
     printf("Creating maze with file %s\n", argv[1]);
     maze_t * maze = createMaze(argv[1]);
 
+    if(maze == NULL)
+        printf("this is null");
     printf("\nUnsolved maze:\n");
     printMaze(maze);
+    printf("this is not working");
 
     if(solveMazeDFS(maze, maze->startColumn, maze->startRow))
     {
