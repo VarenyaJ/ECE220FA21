@@ -21,7 +21,7 @@ maze_t * createMaze(char * fileName)
 {
     // Your code here. Make sure to replace following line with your own code.
     int i, j, row, col;     //initialize i and j to count index, then use row and col to go through cells
-    char c;     //create new character value
+    char new_val;     //create new character value
 
     FILE *reader = fopen(fileName, "r");    //use file with pointer reader to create a stream which can map the maze
     fscanf(reader, "%d %d", &col, &row);    //read the column and row data from the file
@@ -41,12 +41,12 @@ maze_t * createMaze(char * fileName)
     //another set of nested loops accesses the row and columns in order to coy the maze onto the program file
     for (i = 0; i < row; i++){
         for (j = 0; j < col; j++){
-            c = fgetc(reader);      // copy/duplicate the maze into the file here
+            new_val = fgetc(reader);      // copy/duplicate the maze into the file here
 
             //conditional statement to map how to iterate through loops
-            //if mae is not equal to newline character, then the duplication maze value is set to the currect value of c
-            if(c != "/n"){
-                new_maze -> cells[i][j] = c;
+            //if mae is not equal to newline character, then the duplication maze value is set to the currect value of h
+            if(new_val != '\n'){
+                new_maze -> cells[i][j] = new_val;
             }
             else{   //if it is equal to the newline character, then we don't save the data, we just loop through the iteration
                 j--;
