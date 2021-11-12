@@ -1,63 +1,23 @@
 Compilation Results:
 ********************
-sparsemat.c: In function ‘load_tuples’:
-sparsemat.c:28:20: error: expected identifier or ‘(’ before ‘int’
-     int row_count, int col_count;   //initialize row and column variables
-                    ^
-sparsemat.c:33:31: error: ‘r’ undeclared (first use in this function)
-     fscanf(fjump, "%d %d\n", &r, &c); 
-                               ^
-sparsemat.c:33:31: note: each undeclared identifier is reported only once for each function it appears in
-sparsemat.c:33:35: error: ‘c’ undeclared (first use in this function)
-     fscanf(fjump, "%d %d\n", &r, &c); 
-                                   ^
-sparsemat.c:35:2: error: ‘series’ undeclared (first use in this function)
-  series->m = row_count;  //set # of rows to r 
-  ^
-sparsemat.c:36:14: error: ‘col_count’ undeclared (first use in this function)
-  series->n = col_count;  //set # of columns to c
-              ^
-sparsemat.c:45:5: error: expected ‘)’ before ‘{’ token
-     {
-     ^
-sparsemat.c:57:1: error: expected expression before ‘}’ token
- }
- ^
-sparsemat.c:29:16: warning: unused variable ‘jump’ [-Wunused-variable]
-     sp_tuples *jump = (sp_tuples*)malloc(sizeof(sp_tuples));  //new tuple to hold matrix, with pointer jump
-                ^
-sparsemat.c: In function ‘add_tuples’:
-sparsemat.c:88:9: error: ‘retmat’ undeclared (first use in this function)
-  return retmat;
-         ^
-sparsemat.c: In function ‘mult_tuples’:
-sparsemat.c:94:12: error: ‘retmat’ undeclared (first use in this function)
-     return retmat;
-            ^
-sparsemat.c: In function ‘load_tuples’:
-sparsemat.c:57:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-sparsemat.c: In function ‘add_tuples’:
-sparsemat.c:89:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-sparsemat.c: In function ‘mult_tuples’:
-sparsemat.c:96:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-make: *** [sparsemat.o] Error 1
 
 load_tuples test: 10 pts total
+Test 1: load tuple
++5: load_tuples: m,n,nnz match
++5: load_tuples: nodes match
 
 gv_tuples test: 6 pts total
+Test 2: gv
++6: gv_tuples
 
 set_tuples test: 6 pts 
+Test 3-0: set
++6: set_tuples: delete node at tail
 
-0
-Failed the nightly test.
+22
+Pass the nightly test!!!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2021-11-11_18:20:50
+Timestamp: 2021-11-12_00:35:27
