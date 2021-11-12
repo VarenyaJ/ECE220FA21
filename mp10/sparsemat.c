@@ -288,7 +288,58 @@ sp_tuples * add_tuples(sp_tuples * matA, sp_tuples * matB){
 
 
 
-sp_tuples * mult_tuples(sp_tuples * matA, sp_tuples * matB){ 
+sp_tuples * mult_tuples(sp_tuples * matA, sp_tuples * matB){
+
+
+    if(matA->n != matB->m){
+        //if the matricies are not equal to nxm dimensions
+        return NULL;
+    }
+
+    sp_tuples *retmat = (sp_tuples*)malloc(sizeof(sp_tuples)); //allocate and reinitialize retmat
+    retmat->m = matA->m; //set retmat with dimension m to matrix A with dimension m
+    retmat->n = matB->n; //set retmat with dimension n to matrix B with dimension n
+    retmat->nz = 0; //non-zero matrix element of 0
+    retmat->tuples_head = NULL; //the head matrix is NULL
+
+
+    sp_tuples_node *locusA = matA->tuples_head; //traverse matrix locusA
+    while (locusA != NULL)
+    {
+        int x_of_A = locusA->row; //initialize a new variable and set it equal to locusaA with elements in row
+        int y_of_A = locusA->col; //initialize a new variable and set it equal to locusaA with elements in col
+
+        sp_tuples_node *locusB = matB->tuples_head; //traverse matrix locusB
+        while (locusB != NULL){
+            int x_of_B = locusA->row; //initialize a new variable and set it equal to locusaA with elements in row
+            int y_of_B = locusA->col; //initialize a new variable and set it equal to locusaA with elements in col
+
+            //if row of b = col of a
+            if(x_of_B == y_of_A){
+                double value_at_A = gv_tuples(matA, x_of_A, y_of_A);
+                double value_at_B = gv_tuples(matB, x_of_B, y_of_B);
+                double value_of_retmat = gv_tuples(retmat, x_of_A, y_of_B);
+
+                //create a new variable which is the value of retmat from gv_tuples + (value of A * value of B)
+                double new_var = value_of_retmat + (value_at_A * value_at_B);
+
+                set_tuples(retmat, x_of_A, y_of_B, new_var);
+            }
+
+            //if row b > col A, stop traversing B
+            else if (x_of_B > y_of_A)
+            {
+                break;
+            }
+
+            locusB = locusB->next;  //otherwise set locusB = locusB elements in the next node
+            
+        }
+
+        locusA = locusA->next;  //otherwise set locusB = locusB elements in the next node
+    }
+    
+
     return retmat;
 
 }
