@@ -125,7 +125,7 @@ void recut(node_t* ptr) {
   // TODO:
   //nested loops
   if(ptr->cutline == H){    // if ptr has a horizontal cutline
-    ptr->cutline == V;  // the ptr cutline is changed to vertical
+    ptr->cutline = V;  // the ptr cutline is changed to vertical
   }
   else{     //if ptr has a vertical cutline
     ptr->cutline = H;   ////the ptr cutline is changed to horizontal (H)
