@@ -56,6 +56,15 @@ void floorplan(const char file[]) {
 // Return 1 if the given slicing tree node is a leave node, and 0 otherwise.
 int is_leaf_node(node_t* ptr) {
   // TODO: (remember to modify the return value appropriately)
+  //condition to determine if the pointer passed to the function points to a valid tree node
+  if(ptr == NULL){  //if ptr passed to function is NULL
+    return 0; //return 0 because it is not a valid node
+  }
+  //if it is a valid node, determine if it is a leaf node
+  if( !(ptr->left) && !(ptr->right) ){  //a leaf node does not have left or right children
+    return 1; //leaf node, return 1
+  }
+  //after these tests, if the node is not a leaf node, return 0
   return 0;
 }
 
@@ -63,6 +72,15 @@ int is_leaf_node(node_t* ptr) {
 // Return 1 if the given slicing tree node is an internal node, and 0 otherwise.
 int is_internal_node(node_t* ptr) {
   // TODO: (remember to modify the return value appropriately)
+  //here the program first finds out if the pointer passed into the function points to a valid tree node
+  //then it needs to determine if that node is an internal node
+  if(ptr == NULL){  //if ptr passed to function is NULL
+    return 0; //return 0 because it is not a valid node
+  }
+  if((ptr->left) || (ptr->right)){  //check if the pointer has a child node
+    return 1;   //it's an internal node
+  }  
+  //after all this, return 0 if it is not an internal node
   return 0;
 }
 
@@ -70,7 +88,20 @@ int is_internal_node(node_t* ptr) {
 // Return 1 if the given subtree rooted at node 'b' resides in the subtree rooted at node 'a'.
 int is_in_subtree(node_t* a, node_t* b) {
   // TODO: (remember to modify the return value appropriately)
-  return 0;
+  //check if pointers passed into are NULL
+  if(a == NULL || b == NULL){
+    return 0;   //the pointers are NULL so return false
+  }
+  //check if a and b point to the same node
+  if(a == b){
+      return 1; //
+  }
+  //recursion: call the function so search for b in the left of a
+  if(is_in_subtree(a->left, b)){
+    return 1; //true when node b is found
+  }
+  //if nothing else works, check for b in the right side of a
+  return is_in_subtree(a->right, b);
 }
 
 // Procedure: rotate
@@ -78,6 +109,10 @@ int is_in_subtree(node_t* a, node_t* b) {
 // and the width of the modules are swapped.
 void rotate(node_t* ptr) {
   // TODO: 
+  int temp; //need a variable swap ptr height and width
+  temp = ptr->module->h;
+  ptr->module->h = ptr->module->w;
+  ptr->module->w = temp;
 }
 
 // Procedure: recut
@@ -87,8 +122,14 @@ void rotate(node_t* ptr) {
 void recut(node_t* ptr) {
   if(!is_internal_node(ptr)) return;
   assert(ptr->module == NULL && ptr->cutline != UNDEFINED_CUTLINE);
-
   // TODO:
+  //nested loops
+  if(ptr->cutline == H){    // if ptr has a horizontal cutline
+    ptr->cutline == V;  // the ptr cutline is changed to vertical
+  }
+  else{     //if ptr has a vertical cutline
+    ptr->cutline = H;   ////the ptr cutline is changed to horizontal (H)
+  }
   return;
 }
 
@@ -100,6 +141,10 @@ void swap_module(node_t* a, node_t* b) {
   assert(b->module != NULL && b->cutline == UNDEFINED_CUTLINE);
 
   // TODO:
+  module_t *temp;           //create a temporary module for swapping modules in nodes a and b
+  temp =  a->module;        //temp = module of node a
+  a->module = b->module;    //module of a becomes module of b
+  b->module = temp;         //module of b becomes temp
 }
 
 // Procedure: swap_topology
@@ -113,6 +158,26 @@ void swap_topology(node_t* a, node_t* b) {
   assert(a->parent != NULL && b->parent != NULL);
  
   // TODO:
+  //swap parents of a and b
+  node_t *temp;           //create a temporary node for swapping nodes parent nodes of a and b
+  temp =  a->parent;        //temp = parent node of node a
+  a->parent = b->parent;    //node of a becomes parent node of node b
+  b->parent = temp;         //parent node of b becomes temp
+
+  //swap children
+  if(a->parent->left == b){ //if the left child of the new parent node of a is b
+    a->parent->left = a; //change the left child of the new parent node of a to a
+  }
+  else{ //if the right child of the new parent node of a is b
+    a->parent->right = a; //change the right child of the new parent node of a to a
+  }
+  if(b->parent->left == a){ //if the left child of the new parent node of b is a
+    b->parent->left = b; //change the left child of the new parent node of b to b
+  }
+  else{ //if the right child of the new parent node of b is a
+    b->parent->right = b; //change the right child of the new parent node of b to b
+  }
+
 }
 
 // Procedure: get_expression
@@ -148,6 +213,21 @@ void postfix_traversal(node_t* ptr, int* nth, expression_unit_t* expression) {
   if(ptr == NULL) return;
 
   // TODO:
+  //recusively traverse tree
+  postfix_traversal(ptr->left, nth, expression); //recusively traverse the left subtree
+  postfix_traversal(ptr->right, nth, expression); //recusively traverse the right subtree
+  
+  if(ptr->module){//if the  module pointer exists
+  expression[*nth].cutline = UNDEFINED_CUTLINE; //cutline of data in the *nth idx of the expression arr = undefined
+  expression[*nth].module = ptr->module;        //module of data in the *nth idx of the expression arr = module of ptr
+  }
+  if(ptr->cutline != UNDEFINED_CUTLINE){ //if ptr has horizontal || ptr has vertical cutline
+    expression[*nth].module = NULL; // module of data in *nth idx of expression arr ==  NULL
+    expression[*nth].cutline = ptr->cutline; //cutline of data in the *nth idx of the expression arr = cutline of ptr
+  }
+  (*nth)++; //increment the (*nth) index
+
+
 }
 
 // get_total_resource
@@ -155,8 +235,18 @@ void postfix_traversal(node_t* ptr, int* nth, expression_unit_t* expression) {
 int get_total_resource(node_t* ptr)
 {
   // TODO:
+  if (ptr == NULL){
+    return 0; //return 0 if pointer is mull
+  }
 
-  return 0;
+  int sum = 0;  //declare and initialize a variable to hold sum
+
+  for(int i = 0; i < num_modules; i++){
+    //increment sum by value in the resource of index i of array modules
+    sum = sum + modules[i].resource;
+  }
+
+  return sum; //give back value of variable sum
 }
 
 // Procedure: init_slicing_tree
@@ -191,7 +281,47 @@ node_t* init_slicing_tree(node_t* par, int n) {
   assert(n >= 0 && n < num_modules);
 
   // TODO:
-  return NULL;
+  //make space in memory for a new node *ptr
+  node_t *ptr = (node_t*)malloc(sizeof(node_t));
+
+  //if n = ((# of input modules) -1)
+  if(n == num_modules - 1){
+  ptr->parent = par;
+  ptr->cutline = UNDEFINED_CUTLINE;
+  ptr->module = &modules[n];
+  return ptr;
+  }
+  //
+  //  need to change attributes of pointer
+  ptr->parent = par;
+  ptr->cutline = V;
+  ptr->module = NULL;
+
+
+
+
+  //need to change child attributes
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NEED TO GO RIGHT TO LEFT
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//make space for right child of ptr node
+ptr->right = (node_t*)malloc(sizeof(node_t));
+//make pointer's right child's parent = pointer
+ptr->right->parent = ptr;
+//change module array
+ptr->right->module = &modules[n];
+//change cutline
+ptr->right->cutline = UNDEFINED_CUTLINE;
+
+//modify left
+ptr->left = init_slicing_tree(ptr, n+1);
+
+
+  return ptr;
 }
 
 
