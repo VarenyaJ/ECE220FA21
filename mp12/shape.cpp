@@ -75,6 +75,12 @@ double Circle::getVolume()const{
 
 Circle Circle::operator + (const Circle& circ){
 	Circle r = Circle(0.0);
+	r.radius_ = radius_ + circ.radius_;
+	return r;
+}
+
+Circle Circle::operator - (const Circle& circ){
+	Circle r = Circle(0.0);
 	r.radius_ = max(0.0, radius_ - circ.radius_);
 	return r;
 }
@@ -101,6 +107,13 @@ double Sphere::getVolume()const{
 Sphere Sphere::operator + (const Sphere& sphere){
 	Sphere r = Sphere(0.0);
 	r.radius_ = radius_ + sphere.radius_;
+	return r;
+}
+
+
+Sphere Sphere::operator - (const Sphere& sphere){
+	Sphere r = Sphere(0.0);
+	r.radius_ = max(0.0, radius_ - sphere.radius_);
 	return r;
 }
 
@@ -221,3 +234,29 @@ double MaxVolume(vector<Shape*> shapes){
 	return max_volume;
 }
 
+/*
+g++ main.cpp shape.cpp -o mp12
+max area = 301.719
+max volume = 238.924
+g++ -g -c shape.cpp -o shape.o
+g++ -g -c verify.cpp -o verify.o
+g++ -g verify.o shape.o check.a -o verify_mp12
+ 
+
+ ------------------- Begin Verifying MP12 ---------------------
+Rectangle::operator - incorrect 
+Sphere::getVolume() incorrect 
+RectPrism::operator - incorrect 
+MaxVolume() or Constructors are incorrect
+CreateShape() or RectPrism incorrect
+getName() 6/6
+Rectangle: 12/16
+Circle: 16/16
+Sphere: 12/16
+RectPrism: 12/16
+MaxArea(): 10/10
+MaxVolume(): 0/10
+CreateShape() 0/10
+Your total Socre for MP12: 68/100
+-------------------- End Verifying MP12 ----------------------
+*/
