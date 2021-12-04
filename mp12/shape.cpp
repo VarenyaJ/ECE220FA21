@@ -30,7 +30,7 @@ Rectangle::Rectangle(double width, double length):Shape("Rectangle"){
 }
 
 double Rectangle::getArea()const{
-	return length_ width_;
+	return length_ * width_;
 }
 
 double Rectangle::getVolume()const{
@@ -39,15 +39,15 @@ double Rectangle::getVolume()const{
 
 Rectangle Rectangle::operator + (const Rectangle& rect){
 	Rectangle r = Rectangle(0.0, 0.0);
-	r.width_ = width + rec.width_;
-	r.length_ = length + rec.length_;
+	r.length_ = length_ + rect.length_;
+	r.width_ = width_ + rect.width_;
 	return r;
 }
 
 Rectangle Rectangle::operator - (const Rectangle& rect){
-	Rectangle c = Rectangle(0.0, 0.0);
-	r.width_ = width - rec.width_;
-	r.length_ = length - rec.length_;
+	Rectangle r = Rectangle(0.0, 0.0);
+	r.length_ = length_ - rect.length_;
+	r.width_ = width_ - rect.width_;
 	return r;
 }
 
@@ -61,7 +61,7 @@ double Rectangle::getLength()const{return length_;}
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
 
-Circle:Circle(double radius):Shape("Circle"){
+Circle::Circle(double radius):Shape("Circle"){
 	radius_ = radius;
 }
 
@@ -86,7 +86,7 @@ double Circle::getRadius()const{return radius_;}
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
 
-Sphere:Sphere(double radius):Shape("Sphere"){
+Sphere::Sphere(double radius):Shape("Sphere"){
 	radius_ = radius;
 }
 
@@ -100,7 +100,7 @@ double Sphere::getVolume()const{
 
 Sphere Sphere::operator + (const Sphere& sphere){
 	Sphere r = Sphere(0.0);
-	r.radius_ = radius_ + sphere.radius;
+	r.radius_ = radius_ + sphere.radius_;
 	return r;
 }
 
@@ -133,7 +133,7 @@ RectPrism RectPrism::operator + (const RectPrism& rctpsm){
   return r;
 }
 
-RectPrism RectPrism::operator - (const RectPrism& rectp){
+RectPrism RectPrism::operator - (const RectPrism& rctpsm){
   RectPrism r = RectPrism(0.0, 0.0, 0.0);
   r.length_ = max(0.0, length_ - rctpsm.length_);
   r.width_ = max(0.0, width_ - rctpsm.width_);
@@ -177,7 +177,7 @@ vector<Shape*> CreateShapes(char* file_name){
 		}
 		else if(name == "RectPrism"){
 			ifs >> value1 >> value2 >> value3;
-			object = new Sphere(value1, value2, value3);
+			object = new RectPrism(value1, value2, value3);
 		}
 
 		v.push_back(object);
