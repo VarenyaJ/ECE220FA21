@@ -9,6 +9,14 @@
 //Base class' constructor should be called in derived classes'
 //constructor to initizlize Shape's private variable 
 
+string Shape::getName(){
+	return name;
+}
+
+Shape::Shape(string name){
+	name_ = name;
+}
+
 
 
 //Rectangle
@@ -16,6 +24,32 @@
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
 
+Rectangle::Rectangle(double width, double length):Shape("Rectangle"){
+	width_ = width;
+	length_ = length;
+}
+
+double Rectangle::getArea()const{
+	return length_ width_;
+}
+
+double Rectangle::getVolume()const{
+	return 0;
+}
+
+Rectangle Rectangle::operator + (const Rectangle& rect){
+	Rectangle r = Rectangle(0.0, 0.0);
+	r.width_ = width + rec.width_;
+	r.length_ = length + rec.length_;
+	return r;
+}
+
+Rectangle Rectangle::operator - (const Rectangle& rect){
+	Rectangle c = Rectangle(0.0, 0.0);
+	r.width_ = width - rec.width_;
+	r.length_ = length - rec.length_;
+	return r;
+}
 
 
 double Rectangle::getWidth()const{return width_;}
@@ -26,6 +60,24 @@ double Rectangle::getLength()const{return length_;}
 //Please implement the member functions of Circle:
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
+
+Circle:Circle(double radius):Shape("Circle"){
+	radius_ = radius;
+}
+
+double Circle::getArea()const{
+	return radius_ * radius_ * M_PI;
+}
+
+double Circle::getVolume()const{
+	return 0;
+}
+
+Circle Circle::operator + (const Circle& circ){
+	Circle r = Circle(0.0);
+	r.radius_ = max(0.0, radius_ - circ.radius_);
+	return r;
+}
 
 double Circle::getRadius()const{return radius_;}
 
