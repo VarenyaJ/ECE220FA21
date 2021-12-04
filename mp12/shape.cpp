@@ -7,10 +7,10 @@
 //constructor, getName()
 //
 //Base class' constructor should be called in derived classes'
-//constructor to initizlize Shape's private variable 
+//constructor to initizlize Shape's private variable
 
 string Shape::getName(){
-	return name;
+	return name_;
 }
 
 Shape::Shape(string name){
@@ -86,7 +86,23 @@ double Circle::getRadius()const{return radius_;}
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
 
+Sphere:Sphere(double radius):Shape("Sphere"){
+	radius_ = radius;
+}
 
+double Sphere::getArea()const{
+	return 4 * radius_ * radius_ * M_PI;
+}
+
+double Sphere::getVolume()const{
+	return (4.0/3.0) * radius_ * radius_ * M_PI;
+}
+
+Sphere Sphere::operator + (const Sphere& sphere){
+	Sphere r = Sphere(0.0);
+	r.radius_ = radius_ + sphere.radius;
+	return r;
+}
 
 double Sphere::getRadius()const{return radius_;}
 
@@ -95,6 +111,35 @@ double Sphere::getRadius()const{return radius_;}
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
 
+RectPrism::RectPrism(double length, double width, double height):Shape("RectPrism"){
+  length_ = length;
+  width_ = width;
+  height_ = height;
+}
+
+double RectPrism::getArea()const{
+	return 2 * ( (length_ * width_) + (length_ * height_) + (width_ * height_) );
+}
+
+double RectPrism::getVolume()const{
+  return length_ * width_ * height_;
+}
+
+RectPrism RectPrism::operator + (const RectPrism& rctpsm){
+  RectPrism r = RectPrism(0.0, 0.0, 0.0);
+  r.length_ = length_ + rctpsm.length_;
+  r.width_ = width_ + rctpsm.width_;
+  r.height_ = height_ + rctpsm.height_;
+  return r;
+}
+
+RectPrism RectPrism::operator - (const RectPrism& rectp){
+  RectPrism r = RectPrism(0.0, 0.0, 0.0);
+  r.length_ = max(0.0, length_ - rctpsm.length_);
+  r.width_ = max(0.0, width_ - rctpsm.width_);
+  r.height_ = max(0.0, height_ - rctpsm.height_);
+  return r;
+}
 
 double RectPrism::getWidth()const{return width_;}
 double RectPrism::getHeight()const{return height_;}
@@ -106,7 +151,40 @@ double RectPrism::getLength()const{return length_;}
 // Return a vector of pointers that points to the objects 
 vector<Shape*> CreateShapes(char* file_name){
 	//@@Insert your code here
-	return vector<Shape*>(0, NULL); // please remeber to modify this line to return the correct value
+
+	int i, size;
+	double value1, value2, value3;
+	string name;
+	vector<Shape *> v;
+
+	ifstream ifs(file_name, std::ifstream::in);
+	ifs>>size;
+
+	for(i = 0; i < size; i++){
+		Shape *object;
+		ifs>>name;
+		if(name == "Rectangle"){
+			ifs >> value1 >> value2;
+			object = new Rectangle(value1, value2);
+		}
+		else if(name == "Circle"){
+			ifs >> value1;
+			object = new Circle(value1);
+		}
+		else if(name == "Sphere"){
+			ifs >> value1;
+			object = new Sphere(value1);
+		}
+		else if(name == "RectPrism"){
+			ifs >> value1 >> value2 >> value3;
+			object = new Sphere(value1, value2, value3);
+		}
+
+		v.push_back(object);
+	}
+	
+	return v;
+	//return vector<Shape*>(0, NULL); // please remeber to modify this line to return the correct value
 }
 
 // call getArea() of each object 
@@ -114,6 +192,13 @@ vector<Shape*> CreateShapes(char* file_name){
 double MaxArea(vector<Shape*> shapes){
 	double max_area = 0;
 	//@@Insert your code here
+
+	int i;
+	for(i = 0; i < shapes.size(); i++){
+		if(max_area <= shapes[i]->getArea()){
+			max_area = shapes[i]->getArea();
+		}
+	}
 	
 	return max_area;
 }
@@ -124,6 +209,13 @@ double MaxArea(vector<Shape*> shapes){
 double MaxVolume(vector<Shape*> shapes){
 	double max_volume = 0;
 	//@@Insert your code here
+
+	int i;
+	for(i = 0; i < shapes.size(); i++){
+		if(max_volume <= shapes[i]->getVolume()){
+			max_volume = shapes[i]->getVolume();
+		}
+	}
 
 	
 	return max_volume;
