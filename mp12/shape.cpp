@@ -25,8 +25,8 @@ Shape::Shape(string name){
 //@@Insert your code here
 
 Rectangle::Rectangle(double width, double length):Shape("Rectangle"){
-	width_ = width;
 	length_ = length;
+	width_ = width;
 }
 
 double Rectangle::getArea()const{
@@ -124,7 +124,7 @@ double Sphere::getRadius()const{return radius_;}
 //constructor, getArea(), getVolume(), operator+, operator-
 //@@Insert your code here
 
-RectPrism::RectPrism(double length, double width, double height):Shape("RectPrism"){
+RectPrism::RectPrism(double width, double length, double height):Shape("RectPrism"){
   length_ = length;
   width_ = width;
   height_ = height;
@@ -234,8 +234,7 @@ double MaxVolume(vector<Shape*> shapes){
 	return max_volume;
 }
 
-/*
-g++ main.cpp shape.cpp -o mp12
+/*g++ main.cpp shape.cpp -o mp12
 max area = 301.719
 max volume = 238.924
 g++ -g -c shape.cpp -o shape.o
@@ -246,17 +245,15 @@ g++ -g verify.o shape.o check.a -o verify_mp12
  ------------------- Begin Verifying MP12 ---------------------
 Rectangle::operator - incorrect 
 Sphere::getVolume() incorrect 
-RectPrism::operator - incorrect 
 MaxVolume() or Constructors are incorrect
-CreateShape() or RectPrism incorrect
 getName() 6/6
 Rectangle: 12/16
 Circle: 16/16
 Sphere: 12/16
-RectPrism: 12/16
+RectPrism: 16/16
 MaxArea(): 10/10
 MaxVolume(): 0/10
-CreateShape() 0/10
-Your total Socre for MP12: 68/100
+CreateShape() 10/10
+Your total Socre for MP12: 82/100
 -------------------- End Verifying MP12 ----------------------
 */
