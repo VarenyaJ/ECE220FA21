@@ -37,17 +37,23 @@ double Rectangle::getVolume()const{
 	return 0;
 }
 
-Rectangle Rectangle::operator + (const Rectangle& rect){
+Rectangle Rectangle::operator + (const Rectangle& rec){
 	Rectangle r = Rectangle(0.0, 0.0);
-	r.length_ = length_ + rect.length_;
-	r.width_ = width_ + rect.width_;
+	r.width_ = getWidth() + rec.width_;
+	r.length_ = getLength() + rec.length_;
 	return r;
 }
 
-Rectangle Rectangle::operator - (const Rectangle& rect){
+Rectangle Rectangle::operator - (const Rectangle& rec){
 	Rectangle r = Rectangle(0.0, 0.0);
-	r.length_ = length_ - rect.length_;
-	r.width_ = width_ - rect.width_;
+	r.width_ = width_ - rec.width_;
+	r.length_ = length_ - rec.length_;
+	if(r.width_ < 0){
+		r.width_ = 0;
+	}
+	if(r.length_ < 0){
+		r.length_ = 0;
+	}
 	return r;
 }
 
@@ -101,19 +107,19 @@ double Sphere::getArea()const{
 }
 
 double Sphere::getVolume()const{
-	return (4.0/3.0) * radius_ * radius_ * M_PI;
+	return (4.0/3.0) * radius_ * radius_ * radius_ * M_PI;
 }
 
-Sphere Sphere::operator + (const Sphere& sphere){
+Sphere Sphere::operator + (const Sphere& sp){
 	Sphere r = Sphere(0.0);
-	r.radius_ = radius_ + sphere.radius_;
+	r.radius_ = radius_ + sp.radius_;
 	return r;
 }
 
 
-Sphere Sphere::operator - (const Sphere& sphere){
+Sphere Sphere::operator - (const Sphere& sp){
 	Sphere r = Sphere(0.0);
-	r.radius_ = max(0.0, radius_ - sphere.radius_);
+	r.radius_ = max(0.0, radius_ - sp.radius_);
 	return r;
 }
 
@@ -138,19 +144,19 @@ double RectPrism::getVolume()const{
   return length_ * width_ * height_;
 }
 
-RectPrism RectPrism::operator + (const RectPrism& rctpsm){
+RectPrism RectPrism::operator + (const RectPrism& rp){
   RectPrism r = RectPrism(0.0, 0.0, 0.0);
-  r.length_ = length_ + rctpsm.length_;
-  r.width_ = width_ + rctpsm.width_;
-  r.height_ = height_ + rctpsm.height_;
+  r.length_ = length_ + rp.length_;
+  r.width_ = width_ + rp.width_;
+  r.height_ = height_ + rp.height_;
   return r;
 }
 
-RectPrism RectPrism::operator - (const RectPrism& rctpsm){
+RectPrism RectPrism::operator - (const RectPrism& rp){
   RectPrism r = RectPrism(0.0, 0.0, 0.0);
-  r.length_ = max(0.0, length_ - rctpsm.length_);
-  r.width_ = max(0.0, width_ - rctpsm.width_);
-  r.height_ = max(0.0, height_ - rctpsm.height_);
+  r.length_ = max(0.0, length_ - rp.length_);
+  r.width_ = max(0.0, width_ - rp.width_);
+  r.height_ = max(0.0, height_ - rp.height_);
   return r;
 }
 
@@ -234,26 +240,24 @@ double MaxVolume(vector<Shape*> shapes){
 	return max_volume;
 }
 
-/*g++ main.cpp shape.cpp -o mp12
+/*
+g++ main.cpp shape.cpp -o mp12
 max area = 301.719
-max volume = 238.924
+max volume = 492.807
 g++ -g -c shape.cpp -o shape.o
 g++ -g -c verify.cpp -o verify.o
 g++ -g verify.o shape.o check.a -o verify_mp12
  
 
  ------------------- Begin Verifying MP12 ---------------------
-Rectangle::operator - incorrect 
-Sphere::getVolume() incorrect 
-MaxVolume() or Constructors are incorrect
 getName() 6/6
-Rectangle: 12/16
+Rectangle: 16/16
 Circle: 16/16
-Sphere: 12/16
+Sphere: 16/16
 RectPrism: 16/16
 MaxArea(): 10/10
-MaxVolume(): 0/10
+MaxVolume(): 10/10
 CreateShape() 10/10
-Your total Socre for MP12: 82/100
+Your total Socre for MP12: 100/100
 -------------------- End Verifying MP12 ----------------------
 */
